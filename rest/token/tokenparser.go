@@ -1,6 +1,7 @@
 package token
 
 import (
+	"encoding/base64"
 	"net/http"
 	"sync"
 	"sync/atomic"
@@ -81,7 +82,7 @@ func (tp *TokenParser) ParseToken(r *http.Request, secret, prevSecret string) (*
 func (tp *TokenParser) doParseToken(r *http.Request, secret string) (*jwt.Token, error) {
 	return request.ParseFromRequest(r, request.AuthorizationHeaderExtractor,
 		func(token *jwt.Token) (any, error) {
-			return []byte(secret), nil
+			return base64.RawStdEncoding.DecodeString(secret)
 		}, request.WithParser(newParser()))
 }
 
